@@ -1,0 +1,26 @@
+services:
+  - type: web
+    name: nironchik-bot
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    envVars:
+      - key: TOKEN
+        sync: false
+      - key: WEBAPP_URL
+        sync: false
+      - key: ADMIN_ID
+        sync: false
+      - key: ADMIN_GROUP
+        sync: false
+      - key: CARD_PRIVAT
+        sync: false
+      - key: CARD_MONO
+        sync: false
+      - key: REVIEWS_GROUP
+        sync: false
+      - key: REVIEWS_CHANNEL
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.11.0

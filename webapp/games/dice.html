@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Кубик - Nironchik Shop</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+        body{font-family:'Inter',-apple-system,sans-serif;background:#070714;color:#fff;height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;user-select:none}
+
+        header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:rgba(7,7,20,0.9);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:0.5px solid rgba(255,255,255,0.06);z-index:10}
+        .back-btn{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);text-decoration:none}
+        .back-btn:active{background:rgba(255,255,255,0.12)}
+        .title{font-size:16px;font-weight:800;letter-spacing:2px;background:linear-gradient(135deg,#ffd54f,#ff8f00);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .h-right{display:flex;align-items:center;gap:8px}
+        .info-btn{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,0.06);border:0.5px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.7);cursor:pointer}
+        .balance-chip{display:flex;align-items:center;gap:5px;padding:6px 14px;border-radius:14px;background:rgba(255,193,7,0.06);border:0.5px solid rgba(255,193,7,0.1);font-weight:700;font-size:14px;color:#ffd54f}
+        .gold-svg{width:16px;height:16px;flex-shrink:0}
+
+        .game-area{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:14px}
+
+        .dice-display{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:10px}
+        .dice-face{width:80px;height:80px;border-radius:16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;font-size:40px;transition:all 0.3s}
+        .dice-face.rolling{animation:diceRoll 0.08s infinite alternate}
+        @keyframes diceRoll{0%{transform:rotate(-8deg) scale(0.95)}100%{transform:rotate(8deg) scale(1.05)}}
+        .dice-result{font-size:28px;font-weight:800;color:#ffd54f}
+        .vs-text{font-size:14px;font-weight:700;color:rgba(255,255,255,0.2)}
+
+        .prediction-row{display:flex;gap:8px;width:100%;max-width:300px}
+        .pred-btn{flex:1;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.08);background:rgba(255,255,255,0.03);color:rgba(255,255,255,0.5);font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;transition:all 0.2s;text-align:center}
+        .pred-btn.active{background:rgba(124,77,255,0.15);color:#b388ff;border-color:rgba(124,77,255,0.25)}
+        .pred-btn:active{transform:scale(0.94)}
+
+        .controls{padding:10px 14px 14px;background:rgba(7,7,20,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:0.5px solid rgba(255,255,255,0.06);display:flex;flex-direction:column;gap:10px}
+        .ctrl-row{display:flex;align-items:center;gap:10px}
+        .bet-group{flex:1}
+        .label{font-size:11px;font-weight:600;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;display:block}
+        .input-box{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.05);border:0.5px solid rgba(255,255,255,0.08);border-radius:8px;padding:0 10px;height:38px}
+        .input-box input{flex:1;background:none;border:none;outline:none;color:#fff;font-size:14px;font-weight:600;font-family:inherit}
+
+        .slider-group{flex:1}
+        .slider-row{display:flex;align-items:center;gap:10px}
+        .slider-val{font-size:18px;font-weight:800;color:#ffd54f;min-width:50px;text-align:center}
+        .slider-wrap{flex:1;position:relative;height:36px;display:flex;align-items:center}
+        .slider{width:100%;-webkit-appearance:none;appearance:none;height:4px;border-radius:2px;background:rgba(255,255,255,0.08);outline:none}
+        .slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,#7c4dff,#b388ff);box-shadow:0 2px 8px rgba(124,77,255,0.4);cursor:pointer}
+        .chance-text{font-size:11px;color:rgba(255,255,255,0.35);text-align:center;margin-top:2px}
+
+        .demo-row{display:flex;align-items:center;gap:8px}
+        .demo-switch{width:36px;height:20px;border-radius:10px;background:rgba(255,255,255,0.1);border:none;position:relative;cursor:pointer;transition:background 0.25s}
+        .demo-switch::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1);box-shadow:0 1px 4px rgba(0,0,0,0.3)}
+        .demo-switch.on{background:linear-gradient(135deg,#7c4dff,#b388ff)}
+        .demo-switch.on::after{transform:translateX(16px)}
+        .demo-label{font-size:12px;color:rgba(255,255,255,0.4);font-weight:500}
+
+        .roll-btn{width:100%;height:48px;border-radius:10px;border:none;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;transition:all 0.25s;letter-spacing:0.5px}
+        .roll-btn.go{background:linear-gradient(135deg,#00c853,#00e676);color:#003d00;box-shadow:0 4px 16px rgba(0,200,83,0.3)}
+        .roll-btn.go:active{transform:scale(0.97)}
+        .roll-btn:disabled{opacity:0.4;cursor:default}
+
+        .status{text-align:center;font-size:13px;font-weight:600;padding:2px 0;color:rgba(255,255,255,0.35);min-height:20px}
+        .status.win{color:#00e676}
+        .status.lose{color:#ff5252}
+    </style>
+</head>
+<body>
+
+<header>
+    <a href="../index.html" class="back-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+    <div class="title">КУБИК</div>
+    <div class="h-right">
+        <button class="info-btn" onclick="alert('Кубик: оберіть більше/менше.\nПереможний множник залежить від шансу.\nНаприклад: >10 = ×1.88')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></button>
+        <div class="balance-chip"><span id="balance">---</span><svg class="gold-svg" viewBox="0 0 100 100"><path d="M77.3 27.1A35.5 35.5 0 1 0 85.5 50L59.9 50" fill="none" stroke="#7a4200" stroke-width="24" stroke-linecap="round"/><path d="M77.3 27.1A35.5 35.5 0 1 0 85.5 50L59.9 50" fill="none" stroke="url(#gGradGold)" stroke-width="17" stroke-linecap="round"/></svg></div>
+    </div>
+</header>
+
+<svg style="position:absolute;width:0;height:0"><defs><linearGradient id="gGradGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe57f"/><stop offset=".5" stop-color="#ffc107"/><stop offset="1" stop-color="#ff8f00"/></linearGradient></defs></svg>
+
+<div class="game-area">
+    <div class="dice-display">
+        <div class="dice-face" id="dice1">🎲</div>
+        <div class="dice-result" id="diceResult">?</div>
+        <div class="dice-face" id="dice2">🎲</div>
+    </div>
+    <div class="prediction-row">
+        <button class="pred-btn active" onclick="setPred(this,'less')">< Більше</button>
+        <button class="pred-btn" onclick="setPred(this,'eleven')">= 7</button>
+        <button class="pred-btn" onclick="setPred(this,'more')">Менше ></button>
+    </div>
+</div>
+
+<div class="controls">
+    <div class="status" id="status"></div>
+    <div class="ctrl-row">
+        <div class="bet-group">
+            <span class="label">Ставка</span>
+            <div class="input-box">
+                <svg class="gold-svg" viewBox="0 0 100 100"><path d="M77.3 27.1A35.5 35.5 0 1 0 85.5 50L59.9 50" fill="none" stroke="#7a4200" stroke-width="24" stroke-linecap="round"/><path d="M77.3 27.1A35.5 35.5 0 1 0 85.5 50L59.9 50" fill="none" stroke="url(#gGradGold)" stroke-width="17" stroke-linecap="round"/></svg>
+                <input type="number" id="betInput" value="15" min="1">
+            </div>
+        </div>
+        <div class="slider-group">
+            <span class="label">Множник</span>
+            <div class="slider-row">
+                <span class="slider-val" id="multVal">2.00×</span>
+                <div class="slider-wrap"><input type="range" class="slider" id="multSlider" min="1.5" max="36" step="0.01" value="2"></div>
+            </div>
+            <div class="chance-text" id="chanceText">Шанс: 50.0%</div>
+        </div>
+    </div>
+    <div class="demo-row">
+        <button class="demo-switch" id="demoSwitch" onclick="this.classList.toggle('on')"></button>
+        <span class="demo-label">Демо-режим</span>
+    </div>
+    <button class="roll-btn go" id="rollBtn" onclick="roll()">КИНУТИ</button>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const uid = params.get('uid');
+const API = '/api';
+
+const DICE = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+const DICE_VALS = [1,2,3,4,5,6];
+let balance = 0, prediction = 'less', rolling = false;
+
+function loadBalance() {
+    const k = uid ? `dc_balance_${uid}` : 'dc_balance_guest';
+    if (uid) {
+        fetch(`${API}/balance/${uid}`).then(r=>r.json()).then(d=>{
+            balance = d.balance||0; updateBal();
+        }).catch(()=>{ balance = parseFloat(localStorage.getItem(k))||1000; updateBal(); });
+    } else { balance = parseFloat(localStorage.getItem(k))||1000; updateBal(); }
+}
+function saveBalance() {
+    const k = uid ? `dc_balance_${uid}` : 'dc_balance_guest';
+    localStorage.setItem(k, balance); updateBal();
+}
+function updateBal() { document.getElementById('balance').textContent = balance.toFixed(2); }
+
+function setPred(btn, p) {
+    document.querySelectorAll('.pred-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    prediction = p;
+    updateSlider();
+}
+
+function updateSlider() {
+    const v = parseFloat(document.getElementById('multSlider').value);
+    const sum = Math.round(v * 100) / 100;
+    let chance;
+    if (prediction === 'more') { chance = Math.min(99, (sum - 1) / 11 * 100); }
+    else if (prediction === 'less') { chance = Math.min(99, (13 - sum) / 11 * 100); }
+    else { chance = 14.28; }
+    const houseEdge = 0.04;
+    const fairMult = (1 - houseEdge) / (chance / 100);
+    const displayMult = v;
+    document.getElementById('multVal').textContent = displayMult.toFixed(2) + '×';
+    document.getElementById('chanceText').textContent = `Шанс: ${Math.round(chance * 10) / 10}%`;
+}
+
+document.getElementById('multSlider').addEventListener('input', updateSlider);
+
+function roll() {
+    if (rolling) return;
+    const bet = parseInt(document.getElementById('betInput').value) || 0;
+    if (bet <= 0) return alert('Введіть суму ставки');
+    const isDemo = document.getElementById('demoSwitch').classList.contains('on');
+    const mult = parseFloat(document.getElementById('multSlider').value);
+    if (!isDemo && bet > balance) return alert('Недостатньо голди!');
+    if (!isDemo) { balance -= bet; saveBalance(); }
+
+    rolling = true;
+    const d1 = document.getElementById('dice1');
+    const d2 = document.getElementById('dice2');
+    const dr = document.getElementById('diceResult');
+    const btn = document.getElementById('rollBtn');
+    btn.disabled = true;
+    document.getElementById('status').className = 'status';
+    document.getElementById('status').textContent = '';
+
+    let count = 0;
+    const iv = setInterval(() => {
+        d1.textContent = DICE[Math.floor(Math.random() * 6)];
+        d2.textContent = DICE[Math.floor(Math.random() * 6)];
+        count++;
+        if (count > 12) {
+            clearInterval(iv);
+            const v1 = Math.floor(Math.random() * 6);
+            const v2 = Math.floor(Math.random() * 6);
+            d1.textContent = DICE[v1];
+            d2.textContent = DICE[v2];
+            const total = DICE_VALS[v1] + DICE_VALS[v2];
+
+            let won = false;
+            if (prediction === 'more') won = total > 7;
+            else if (prediction === 'less') won = total < 7;
+            else won = total === 7;
+
+            dr.textContent = total;
+            dr.style.color = won ? '#00e676' : '#ff5252';
+            dr.style.textShadow = won ? '0 0 20px rgba(0,230,118,0.5)' : '0 0 20px rgba(255,82,82,0.5)';
+
+            const st = document.getElementById('status');
+            if (won) {
+                const winAmount = Math.floor(bet * mult);
+                st.textContent = `Виграш: ${winAmount}г (×${mult.toFixed(2)})`;
+                st.className = 'status win';
+                if (!isDemo) { balance += winAmount; saveBalance(); }
+            } else {
+                st.textContent = `Програш: -${bet}г`;
+                st.className = 'status lose';
+            }
+
+            if (!isDemo && uid) {
+                fetch(`${API}/game-result`, {
+                    method:'POST', headers:{'Content-Type':'application/json'},
+                    body: JSON.stringify({uid, game:'dice', bet, profit: won ? Math.floor(bet * mult) - bet : -bet})
+                }).catch(()=>{});
+            }
+
+            rolling = false;
+            btn.disabled = false;
+        }
+    }, 70);
+}
+
+loadBalance();
+updateSlider();
+</script>
+</body>
+</html>
