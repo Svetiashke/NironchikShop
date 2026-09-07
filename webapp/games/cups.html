@@ -140,6 +140,7 @@
 const params = new URLSearchParams(window.location.search);
 const uid = params.get('uid');
 const API = (params.get('api') || window.location.origin) + '/api';
+document.querySelector('.back-btn').href = '../index.html?' + params.toString();
 const MULT = 3.2;
 const CUPS = 4;
 const PEEK_COST = 5;

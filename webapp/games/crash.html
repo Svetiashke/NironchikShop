@@ -81,6 +81,7 @@
         balance = parseFloat(localStorage.getItem(localKey));
         if (isNaN(balance)) balance = params.balance || 1000;
         document.getElementById('balance').textContent = `🪙 ${balance.toFixed(2)}`;
+        document.querySelector('.back-btn').href = '../index.html?' + new URLSearchParams(window.location.search).toString();
     }
     function saveBalance() {
         const params = getParams();

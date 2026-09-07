@@ -107,6 +107,7 @@
 const params = new URLSearchParams(window.location.search);
 const uid = params.get('uid');
 const API = (params.get('api') || window.location.origin) + '/api';
+document.querySelector('.back-btn').href = '../index.html?' + params.toString();
 
 const ROWS = 9;
 const MULT = 1.87; // per row: 1.87^9 ≈ 512x
