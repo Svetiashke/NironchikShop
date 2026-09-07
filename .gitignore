@@ -1,0 +1,31 @@
+# Environment variables
+.env
+
+# Data files (will be recreated on server)
+balances.json
+tickets.json
+history.json
+reviews.json
+stats.json
+game_stats.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
