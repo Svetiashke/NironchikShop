@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nironchik Shop - Профіль</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #070714; color: #fff;
+            min-height: 100vh; overflow-x: hidden;
+            padding-bottom: 100px;
+        }
+
+        /* ─── Animations ─── */
+        .fade-in { animation: fadeIn 0.5s ease both; }
+        @keyframes fadeIn { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+        /* ─── Profile Card ─── */
+        .profile-card {
+            margin: 16px; padding: 22px 18px;
+            background: linear-gradient(145deg, rgba(40,28,8,0.9), rgba(20,14,4,0.95));
+            border: 1px solid rgba(255,193,7,0.12);
+            border-radius: 20px;
+            display: flex; align-items: center; gap: 14px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.04);
+        }
+        .avatar {
+            width: 56px; height: 56px; border-radius: 50%;
+            background: linear-gradient(135deg, #1a1a3e, #2a2a5e);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; flex-shrink: 0; overflow: hidden;
+            border: 2px solid rgba(255,193,7,0.2);
+            box-shadow: 0 0 16px rgba(255,193,7,0.12);
+        }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-info { flex: 1; min-width: 0; }
+        .profile-name { font-size: 17px; font-weight: 700; }
+        .profile-id { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 1px; }
+        .balance-chip {
+            display: flex; align-items: center; gap: 5px;
+            background: rgba(255,193,7,0.08); border: 1px solid rgba(255,193,7,0.18);
+            padding: 7px 14px; border-radius: 22px;
+            font-weight: 700; font-size: 15px; color: #ffd54f; flex-shrink: 0;
+        }
+        .coin-icon {
+            width: 18px; height: 18px; border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #ffe082, #ffb300, #ff8f00);
+            box-shadow: 0 0 6px rgba(255,179,0,0.5), inset 0 -1px 2px rgba(0,0,0,0.3);
+            flex-shrink: 0; position: relative;
+        }
+        .coin-icon::after {
+            content: 'G'; position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 10px; font-weight: 800; color: #7c5c00;
+        }
+        .plus-btn {
+            width: 30px; height: 30px; border-radius: 50%;
+            background: linear-gradient(135deg, #00c853, #00e676);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px; font-weight: 700; color: #fff; cursor: pointer;
+            text-decoration: none; flex-shrink: 0;
+            box-shadow: 0 2px 12px rgba(0,200,83,0.3);
+            transition: transform 0.2s;
+        }
+        .plus-btn:active { transform: scale(0.88); }
+
+        /* ─── Top Place ─── */
+        .top-place {
+            margin: 0 16px 16px; padding: 14px 16px;
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px;
+        }
+        .top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        .top-label { display: flex; align-items: center; gap: 6px; font-size: 13px; color: rgba(255,255,255,0.5); }
+        .top-rank { font-weight: 700; font-size: 15px; color: #ffd54f; display: flex; align-items: center; gap: 3px; }
+        .progress-bar { width: 100%; height: 5px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #ffc107, #ff8f00); border-radius: 3px; transition: width 0.8s ease; }
+
+        /* ─── Tabs ─── */
+        .tabs {
+            display: flex; margin: 0 16px 16px; gap: 4px;
+            background: rgba(255,255,255,0.03); border-radius: 14px; padding: 4px;
+        }
+        .tab {
+            flex: 1; padding: 11px; border-radius: 11px; border: none;
+            background: transparent; color: rgba(255,255,255,0.4);
+            font-size: 13px; font-weight: 600; cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        .tab.active {
+            background: rgba(255,23,68,0.12); color: #ff1744;
+            box-shadow: 0 0 16px rgba(255,23,68,0.1);
+        }
+        .tab:not(.active):active { transform: scale(0.95); }
+
+        /* ─── Section ─── */
+        .section {
+            margin: 0 16px 14px;
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px; overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+        .section-head {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 14px 16px; cursor: pointer; user-select: none;
+        }
+        .section-head h3 { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; }
+        .section-arrow {
+            font-size: 11px; color: rgba(255,255,255,0.25);
+            transition: transform 0.3s ease;
+        }
+        .section.closed .section-arrow { transform: rotate(180deg); }
+        .section.closed .section-body { display: none; }
+        .section-body { padding: 0 16px 16px; }
+
+        /* ─── Stats Grid ─── */
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .stat-box {
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 12px; padding: 14px 10px; text-align: center;
+        }
+        .stat-label {
+            font-size: 10px; color: rgba(255,255,255,0.35);
+            text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 4px;
+        }
+        .stat-value { font-size: 20px; font-weight: 800; }
+        .stat-value.gold   { color: #ffd54f; }
+        .stat-value.green  { color: #00e676; }
+        .stat-value.red    { color: #ff5252; }
+        .stat-value.blue   { color: #448aff; }
+
+        /* ─── Record Rows ─── */
+        .record-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 11px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .record-row:last-child { border-bottom: none; }
+        .record-label { font-size: 13px; color: rgba(255,255,255,0.45); }
+        .record-val { font-size: 15px; font-weight: 700; }
+        .record-val.pos   { color: #00e676; }
+        .record-val.neg   { color: #ff5252; }
+        .record-val.purple { color: #e040fb; }
+
+        /* ─── Metric Rows ─── */
+        .metric-row {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.03);
+        }
+        .metric-row:last-child { border-bottom: none; }
+        .metric-label { font-size: 13px; color: rgba(255,255,255,0.4); }
+        .metric-val { font-size: 14px; font-weight: 600; }
+
+        /* ─── Game Activity ─── */
+        .activity-card {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 13px 14px; margin-bottom: 8px;
+            background: rgba(255,255,255,0.025);
+            border: 1px solid rgba(255,255,255,0.04);
+            border-radius: 12px;
+        }
+        .activity-card:last-child { margin-bottom: 0; }
+        .activity-name { font-size: 14px; font-weight: 600; }
+        .activity-info { font-size: 11px; color: rgba(255,255,255,0.3); margin-top: 2px; }
+        .activity-win {
+            font-size: 15px; font-weight: 700;
+            background: linear-gradient(135deg, #ffc107, #ff8f00);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .empty-state {
+            text-align: center; padding: 32px 16px;
+            color: rgba(255,255,255,0.2); font-size: 13px;
+        }
+
+        /* ─── Liquid Glass Bottom Nav (iOS style) ─── */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        .nav-glass {
+            position: relative;
+            display: flex; justify-content: space-around; align-items: stretch;
+            background: linear-gradient(
+                180deg,
+                rgba(60, 60, 90, 0.35) 0%,
+                rgba(30, 30, 55, 0.55) 40%,
+                rgba(20, 20, 45, 0.7) 100%
+            );
+            backdrop-filter: blur(50px) saturate(180%) brightness(1.05);
+            -webkit-backdrop-filter: blur(50px) saturate(180%) brightness(1.05);
+            border-top: 0.5px solid rgba(255,255,255,0.12);
+            padding: 6px 0 8px;
+        }
+        .nav-glass::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; height: 0.5px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+        }
+        .nav-glass::after {
+            content: '';
+            position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        .nav-item {
+            flex: 1;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+            text-decoration: none; color: rgba(255,255,255,0.3);
+            font-size: 10px; font-weight: 500; letter-spacing: 0.2px;
+            padding: 6px 0;
+            position: relative; z-index: 1;
+            transition: color 0.25s ease;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .nav-item.active { color: #7c4dff; }
+        .nav-item.active::before {
+            content: '';
+            position: absolute; top: -6px; left: 50%; transform: translateX(-50%);
+            width: 48px; height: 3px; border-radius: 2px;
+            background: linear-gradient(90deg, #7c4dff, #b388ff);
+            box-shadow: 0 0 12px rgba(124,77,255,0.5), 0 0 24px rgba(124,77,255,0.2);
+            animation: tabIndicator 0.35s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        @keyframes tabIndicator {
+            from { width: 0; opacity: 0; }
+            to   { width: 48px; opacity: 1; }
+        }
+        .nav-item:not(.active):active { opacity: 0.6; }
+        .nav-icon {
+            width: 24px; height: 24px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 1px;
+        }
+        .nav-icon svg { width: 22px; height: 22px; fill: currentColor; transition: transform 0.25s ease; }
+        .nav-item.active .nav-icon svg { transform: scale(1.1); }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+
+        @supports (padding-bottom: env(safe-area-inset-bottom)) {
+            body { padding-bottom: calc(90px + env(safe-area-inset-bottom)); }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Profile Card -->
+<div class="profile-card fade-in">
+    <div class="avatar" id="avatar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="rgba(255,255,255,0.25)"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+    </div>
+    <div class="profile-info">
+        <div class="profile-name" id="userName">Завантаження...</div>
+        <div class="profile-id" id="userID"></div>
+    </div>
+    <div class="balance-chip">
+        <span id="balance">0</span>
+        <div class="coin-icon"></div>
+    </div>
+    <a href="https://t.me/NironchikShopBot?start=buy" class="plus-btn">+</a>
+</div>
+
+<!-- Top Place -->
+<div class="top-place fade-in" style="animation-delay:0.08s">
+    <div class="top-row">
+        <div class="top-label"><span>⭐</span> Твоє місце в топі</div>
+        <div class="top-rank" id="topRank">#--- <span style="font-size:10px;opacity:0.5">▼</span></div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="topProgress" style="width:0%"></div></div>
+</div>
+
+<!-- Tabs -->
+<div class="tabs fade-in" style="animation-delay:0.12s">
+    <button class="tab active" data-tab="stats" onclick="switchTab('stats')">📊 Статистика</button>
+    <button class="tab" data-tab="games" onclick="switchTab('games')">🎮 Ігри</button>
+</div>
+
+<!-- Stats Tab -->
+<div class="tab-content active" id="tab-stats">
+    <div class="section fade-in" style="animation-delay:0.16s" id="sec-finance">
+        <div class="section-head" onclick="toggleSec('sec-finance')">
+            <h3>💰 Фінанси</h3><span class="section-arrow">▲</span>
+        </div>
+        <div class="section-body">
+            <div class="stats-grid">
+                <div class="stat-box"><div class="stat-label">Баланс</div><div class="stat-value gold" id="sBalance">0</div></div>
+                <div class="stat-box"><div class="stat-label">Оборот</div><div class="stat-value green" id="sTurnover">0</div></div>
+                <div class="stat-box"><div class="stat-label">Депозити</div><div class="stat-value" id="sDeposits">0</div></div>
+                <div class="stat-box"><div class="stat-label">Виведення</div><div class="stat-value red" id="sWithdrawals">0</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section fade-in" style="animation-delay:0.20s" id="sec-records">
+        <div class="section-head" onclick="toggleSec('sec-records')">
+            <h3>🏆 Рекорди</h3><span class="section-arrow">▲</span>
+        </div>
+        <div class="section-body">
+            <div class="record-row"><span class="record-label">Макс. виграш</span><span class="record-val pos" id="rMaxWin">+0</span></div>
+            <div class="record-row"><span class="record-label">Макс. множник</span><span class="record-val purple" id="rMaxMult">x0.0</span></div>
+            <div class="record-row"><span class="record-label">Макс. програш</span><span class="record-val neg" id="rMaxLoss">-0</span></div>
+        </div>
+    </div>
+
+    <div class="section fade-in" style="animation-delay:0.24s" id="sec-metrics">
+        <div class="section-head" onclick="toggleSec('sec-metrics')">
+            <h3>📈 Показатели</h3><span class="section-arrow">▲</span>
+        </div>
+        <div class="section-body">
+            <div class="metric-row"><span class="metric-label">RTP гравця</span><span class="metric-val" id="mRTP">0%</span></div>
+            <div class="metric-row"><span class="metric-label">Всього ігор</span><span class="metric-val" id="mGames">0</span></div>
+            <div class="metric-row"><span class="metric-label">Всього ставок</span><span class="metric-val" id="mBets">0</span></div>
+            <div class="metric-row"><span class="metric-label">Середня ставка</span><span class="metric-val" id="mAvgBet">0</span></div>
+            <div class="metric-row"><span class="metric-label">Середній виграш</span><span class="metric-val" id="mAvgWin">0</span></div>
+        </div>
+    </div>
+</div>
+
+<!-- Games Tab -->
+<div class="tab-content" id="tab-games">
+    <div class="section fade-in" style="animation-delay:0.16s" id="sec-activity">
+        <div class="section-head" onclick="toggleSec('sec-activity')">
+            <h3>🎯 Активність по іграх</h3><span class="section-arrow">▲</span>
+        </div>
+        <div class="section-body"><div id="activityList"></div></div>
+    </div>
+</div>
+
+<!-- Liquid Glass Bottom Nav -->
+<div class="bottom-nav">
+    <div class="nav-glass">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M21 6H3a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1zm-1 10H4V8h16v8zM6 10h2v4H6zm3 0h2v4H9zm3 0h2v4h-2zm3 0h2v4h-2z"/></svg></span>
+            <span>Ігри</span>
+        </a>
+        <a href="profile.html" class="nav-item active">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></span>
+            <span>Профіль</span>
+        </a>
+    </div>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const uid = params.get('uid');
+const username = params.get('username') || 'Гравець';
+const avatarUrl = params.get('avatar') || '';
+const API = (params.get('api') || window.location.origin) + '/api';
+
+function init() {
+    document.getElementById('userID').textContent = `ID: ${uid || '---'}`;
+    document.getElementById('userName').textContent = username;
+    if (avatarUrl) document.getElementById('avatar').innerHTML = `<img src="${avatarUrl}" alt="">`;
+    loadBalance(); loadStats(); loadGameStats();
+}
+
+function loadBalance() {
+    if (!uid) return;
+    fetch(`${API}/balance/${uid}`).then(r=>r.json()).then(d=>{
+        const b = (d.balance||0).toFixed(2);
+        document.getElementById('balance').textContent = b;
+        document.getElementById('sBalance').textContent = b;
+    }).catch(()=>{});
+}
+
+function loadStats() {
+    if (!uid) return;
+    fetch(`${API}/stats/${uid}`).then(r=>r.json()).then(d=>{
+        document.getElementById('sTurnover').textContent = (d.turnover||0).toFixed(0);
+        document.getElementById('sDeposits').textContent = d.deposits||0;
+        document.getElementById('sWithdrawals').textContent = d.withdrawals||0;
+        document.getElementById('rMaxWin').textContent = '+'+(d.max_win||0);
+        document.getElementById('rMaxMult').textContent = 'x'+(d.max_multiplier||0).toFixed(1);
+        document.getElementById('rMaxLoss').textContent = '-'+(d.max_loss||0);
+        document.getElementById('mRTP').textContent = (d.rtp||0).toFixed(1)+'%';
+        document.getElementById('mGames').textContent = d.games_played||0;
+        document.getElementById('mBets').textContent = (d.total_bets||0).toFixed(0);
+        document.getElementById('mAvgBet').textContent = (d.avg_bet||0).toFixed(0);
+        document.getElementById('mAvgWin').textContent = (d.avg_win||0).toFixed(0);
+        document.getElementById('topRank').innerHTML = `#${d.rank||'---'} <span style="font-size:10px;opacity:0.5">▼</span>`;
+        document.getElementById('topProgress').style.width = Math.min(100, d.rank_progress||0)+'%';
+    }).catch(()=>{});
+}
+
+function loadGameStats() {
+    if (!uid) return;
+    fetch(`${API}/game-stats/${uid}`).then(r=>r.json()).then(d=>{
+        const el = document.getElementById('activityList');
+        if (!d.games||!d.games.length) { el.innerHTML='<div class="empty-state">Ще немає ігор</div>'; return; }
+        el.innerHTML = d.games.map(g=>{
+            const rtp = g.rtp||0;
+            return `<div class="activity-card">
+                <div><div class="activity-name">${g.name}</div>
+                <div class="activity-info">Ставок: ${g.total_bet} · RTP: <span style="color:${rtp>=100?'#00e676':'#ff5252'}">${rtp.toFixed(0)}%</span></div></div>
+                <div class="activity-win">${g.win>0?'+':''}${g.win}</div></div>`;
+        }).join('');
+    }).catch(()=>{});
+}
+
+function switchTab(t) {
+    document.querySelectorAll('.tab').forEach(e=>e.classList.remove('active'));
+    document.querySelector(`[data-tab="${t}"]`).classList.add('active');
+    document.querySelectorAll('.tab-content').forEach(e=>e.classList.remove('active'));
+    document.getElementById(`tab-${t}`).classList.add('active');
+}
+function toggleSec(id) { document.getElementById(id).classList.toggle('closed'); }
+
+init();
+</script>
+</body>
+</html>
