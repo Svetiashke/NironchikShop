@@ -135,7 +135,7 @@
 <script>
 const params = new URLSearchParams(window.location.search);
 const uid = params.get('uid');
-const API = '/api';
+const API = (params.get('api') || window.location.origin) + '/api';
 
 const ROWS = 3, COLS = 4, TOTAL = 12, GEMS = 7, MINES = 5;
 const MAX_PICKS = GEMS;

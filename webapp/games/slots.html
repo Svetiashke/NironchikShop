@@ -114,7 +114,7 @@
 <script>
 const params = new URLSearchParams(window.location.search);
 const uid = params.get('uid');
-const API = '/api';
+const API = (params.get('api') || window.location.origin) + '/api';
 
 const SYMBOLS = ['🍒','🍋','🔔','⭐','💎','7️⃣'];
 const PAYOUTS = {

@@ -127,7 +127,7 @@
 <script>
 const params = new URLSearchParams(window.location.search);
 const uid = params.get('uid');
-const API = '/api';
+const API = (params.get('api') || window.location.origin) + '/api';
 
 const MULT = 1.9;
 let balance = 0;

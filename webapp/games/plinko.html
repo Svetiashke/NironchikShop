@@ -113,7 +113,7 @@
 <script>
 const params = new URLSearchParams(window.location.search);
 const uid = params.get('uid');
-const API = '/api';
+const API = (params.get('api') || window.location.origin) + '/api';
 
 const ROWS = 12;
 const MULTIPLIERS_LOW = [25,10,5,3,2,1.3,0.95,0.8,0.5,0.8,0.95,1.3,2,3,5,10,25];

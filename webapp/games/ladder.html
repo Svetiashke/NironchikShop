@@ -110,7 +110,7 @@
 <script>
 const params = new URLSearchParams(window.location.search);
 const uid = params.get('uid');
-const API = '/api';
+const API = (params.get('api') || window.location.origin) + '/api';
 
 const RUNGS = 10;
 // House edge ~4%: fair mult = (1-0.04)/0.5 = 1.92 → we give ~1.80-1.95

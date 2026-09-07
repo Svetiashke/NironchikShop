@@ -334,6 +334,7 @@ const params = new URLSearchParams(window.location.search);
 const uid = params.get('uid');
 const username = params.get('username') || 'Гравець';
 const avatarUrl = params.get('avatar') || '';
+const API_BASE = params.get('api') || window.location.origin;
 
 const GAMES = [
     { id:'rocket',   name:'Ракета',        img:'assets/games/rocket.webp',   color:'#1a3a5c' },
@@ -364,7 +365,7 @@ function initHeader() {
 function loadBalance() {
     if (!uid) return;
     document.getElementById('balance').textContent = '...';
-    fetch(`/api/balance/${uid}`).then(r=>r.json()).then(d=>{
+    fetch(`${API_BASE}/api/balance/${uid}`).then(r=>r.json()).then(d=>{
         document.getElementById('balance').textContent = (d.balance||0).toFixed(2);
     }).catch(()=>{
         document.getElementById('balance').textContent = '---';
@@ -393,7 +394,7 @@ function initGames() {
     GAMES.forEach((game, i) => {
         const card = document.createElement('a');
         card.className = `game-card stagger-${i+1}`;
-        card.href = `games/${game.id}.html?uid=${uid}&balance=${document.getElementById('balance').textContent}`;
+        card.href = `games/${game.id}.html?uid=${uid}&balance=${document.getElementById('balance').textContent}&api=${API_BASE}`;
         card.innerHTML = `
             <img class="game-card-img" src="${game.img}" alt="${game.name}"
                  onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,${game.color},${game.color}dd)'">

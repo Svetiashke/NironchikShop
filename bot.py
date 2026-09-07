@@ -303,7 +303,8 @@ def main_menu_keyboard(uid=None):
     games_btn = KeyboardButton("🎮 Ігри", style="danger")
     if uid and WEBAPP_URL:
         balance = get_balance(uid)
-        games_url = WEBAPP_URL
+        api_base = WEBAPP_URL.replace('/index.html', '')
+        games_url = f"{WEBAPP_URL}?uid={uid}&balance={balance}&api={api_base}"
         games_btn = KeyboardButton("🎮 Ігри", web_app=WebAppInfo(url=games_url))
     keyboard = [
         [

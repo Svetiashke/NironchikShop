@@ -189,7 +189,7 @@
 
     function showWin(a) { const p = document.getElementById('winPopup'); document.getElementById('winAmount').textContent = `+${a}G`; p.className = 'win-popup show'; setTimeout(() => p.className = 'win-popup', 2000); }
     function showLoss(a) { const p = document.getElementById('lossPopup'); document.getElementById('lossAmount').textContent = `-${a}G`; p.className = 'loss-popup show'; setTimeout(() => p.className = 'loss-popup', 2000); }
-    function sendResult(bet, profit) { const params = getParams(); if (!params.uid) return; fetch('https://nironchik-shop-api.vercel.app/api/game-result', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ uid: params.uid, game: 'crash', bet, profit }) }).catch(() => {}); }
+    function sendResult(bet, profit) { const p = getParams(); if (!p.uid) return; const apiBase = p.api || window.location.origin; fetch(`${apiBase}/api/game-result`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ uid: p.uid, game: 'crash', bet, profit }) }).catch(() => {}); }
 
     init();
     </script>
